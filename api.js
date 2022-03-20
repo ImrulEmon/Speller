@@ -1,44 +1,58 @@
+// var dataT;
+const load = document.getElementById('load');
 const loadBook = () => {
-    const searchText = document.getElementById('input').value;
-    const url = `https://openlibrary.org/search.json?q=javascript`;
+    load.style.display="block";
+    
+    const searchTextField = document.getElementById('input');
+    const searchText = searchTextField.value;
+    const url = `https://openlibrary.org/search.json?q=${searchText}`;
     fetch(url)
         .then(res => res.json())
         .then(data => displayBook(data.docs, data.num_found));
+        
 }
 
-
-
-const showTitle =(book)=>{
-    const bookTitle = `https://openlibrary.org${book.seed[0]}.json`;
-        fetch(bookTitle)
-            .then(res => res.json())
-            .then(title => document.getElementById('bt').innerText=`${title.subtitle}`);  
-}
-
+// -------------display book----------------
 const displayBook = (books, number) => {
-    document.getElementById('book-num').innerHTML = `Total Book : <span class="text-success fw-bold">${number}</span>`;
-    const searchResult = document.getElementById('search-result');
+     // -------------get result div----------------
+     const searchResult = document.getElementById('search-result');
+     searchResult.textContent='';
+     const searchTextField = document.getElementById('input');
+     const searchText = searchTextField.value;
+    if(number){
+        document.getElementById('book-num').innerHTML = `Total Books for <span class="text-info fw-bold">${searchText}</span> : <span class="text-success fw-bold">${number}</span>`;
+    //--------each book------------
     books.forEach(book => {
-
-
-        // book title
-        showTitle(book);
-        // booktitle
-        // const publish = book?.publish_date.length;
         const div = document.createElement('div');
         div.classList.add('col');
         div.innerHTML = `
         <div class="card h-100">
         <img id="cover-img" class="img-fluid mx-auto my-3" src="https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg" alt="...">
         <div class="card-body">
-            <h5 id="bt" class="card-title"></h5>
-            <p class="card-text">First Publish : </p>
+            <h5 class="card-title fw-bold">${book.title}</h5>
+            <p class="card-text">First Publish : ${book.first_publish_year}</p>
             <p>${book.author_name}</p>
         </div>
     </div>
         `;
         searchResult.appendChild(div);
     });
+   
+    }
+    else{
+        searchResult.textContent='';
+        searchResult.innerHTML=`
+        <h6 class="text-danger my-5"><blockquote> No Book Found(Don't give extra Space at the end) </blockquote> </h6>
+        `;
+    }
+    load.style.display="none";
     console.log(books);
 }
-
+// -------------// Enter click event/----------------
+var input = document.getElementById("input");
+input.addEventListener("keypress", function(event) {
+  if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("button-search").click();
+  }
+});

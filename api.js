@@ -2,7 +2,9 @@
 const load = document.getElementById('load');
 const loadBook = () => {
     load.style.display="block";
-    
+    const searchResult = document.getElementById('search-result');
+     searchResult.textContent='';
+     document.getElementById('book-num').textContent='';
     const searchTextField = document.getElementById('input');
     const searchText = searchTextField.value;
     const url = `https://openlibrary.org/search.json?q=${searchText}`;
@@ -25,6 +27,7 @@ const displayBook = (books, number) => {
     books.forEach(book => {
         const div = document.createElement('div');
         div.classList.add('col');
+        div.classList.add('rounded-3');
         div.innerHTML = `
         <div class="card h-100">
         <img id="cover-img" class="img-fluid mx-auto my-3" src="https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg" alt="...">
@@ -42,8 +45,9 @@ const displayBook = (books, number) => {
     else{
         searchResult.textContent='';
         searchResult.innerHTML=`
-        <h6 class="text-danger my-5"><blockquote> No Book Found(Don't give extra Space at the end) </blockquote> </h6>
+        <img src ="error.jpg" class="mx-auto">
         `;
+        searchResult.classList.add("middle");
     }
     load.style.display="none";
     console.log(books);
